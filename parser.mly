@@ -9,9 +9,14 @@ open Ast
 %}
 
 %token <int> INT
+%token <bool> BOOL
 %token <string> IDENT
 %token PLUS
 %token MINUS
+%token EQUALS 
+%token DIFFERENT 
+%token AND 
+%token OR 
 %token LPAREN RPAREN LBRACE RBRACE
 %token FUNC
 %token RETURN
@@ -56,6 +61,14 @@ expr:
     { AddExpr($startpos, lhs, rhs) }
   | lhs = expr; MINUS; rhs = unary_expr
     { SubExpr($startpos, lhs, rhs) }
+  | lhs = expr; EQUALS; rhs = unary_expr
+    { EqExpr($startpos, lhs, rhs) }
+  | lhs = expr; DIFFERENT; rhs = unary_expr
+    { DiffExpr($startpos, lhs, rhs) }
+  | lhs = expr; AND; rhs = unary_expr
+    { AndExpr($startpos, lhs, rhs) }
+  | lhs = expr; OR; rhs = unary_expr
+    { OrExpr($startpos, lhs, rhs) }
 
 unary_expr:
   | LAMBDA
@@ -74,5 +87,6 @@ primary_expr:
   | LPAREN e = expr; RPAREN { e }
   | name = IDENT { IdentExpr($startpos, name) }
   | decimal = INT { IntExpr($startpos, decimal) }
+  | truth = BOOL { BoolExpr($startpos, truth) }
 
 

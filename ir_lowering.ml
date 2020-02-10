@@ -40,10 +40,20 @@ let lower program =
           Ir.GetArg id :: acc
         | IntExpr(_, i) ->
           Ir.ConstInt i :: acc
+        | BoolExpr(_, i) ->
+          Ir.ConstBool i :: acc
         | AddExpr(_, lhs, rhs) ->
           Ir.Add :: lower_expr (lower_expr acc lhs) rhs
         | SubExpr(_, lhs, rhs) ->
           Ir.Sub :: lower_expr (lower_expr acc lhs) rhs
+        | EqExpr(_, lhs, rhs) ->
+          Ir.Eq :: lower_expr (lower_expr acc lhs) rhs
+        | DiffExpr(_, lhs, rhs) ->
+          Ir.Diff :: lower_expr (lower_expr acc lhs) rhs
+        | AndExpr(_, lhs, rhs) ->
+          Ir.And :: lower_expr (lower_expr acc lhs) rhs
+        | OrExpr(_, lhs, rhs) ->
+          Ir.Or :: lower_expr (lower_expr acc lhs) rhs
         | LambdaExpr(_, num_params, env, body) ->
           (* Create a new closure from the body. *)
           let id = new_id() in
